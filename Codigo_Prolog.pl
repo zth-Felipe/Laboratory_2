@@ -89,7 +89,7 @@ getUsuariosId([_,_,_,_,Lista|_],Lista).
 % ---- TDA paradigmadoc
 % Formato: nombre paradigmadoc - fecha de paradigmadoc - lista de usuarios - lista de documentos - historial paradigmadoc.
 % Predicado TDA paradigmadoc
-paradigmadoc(NombreParadoc, FechaParadoc, [NombreParadoc, FechaParadoc, [], [], [], 0]).
+paradigmadoc(NombreParadoc, FechaParadoc, [NombreParadoc, FechaParadoc, ["lista_users"], ["lista_doc"], ["historial"], 0]).
 
 % Como constructor
 % paradigmadoc("paradigmadoc1", Fecha1, PARADOC1).
