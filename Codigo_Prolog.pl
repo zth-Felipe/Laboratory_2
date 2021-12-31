@@ -117,21 +117,21 @@ getIdParaDoc([_,_,_,_,_,Id|_],Id).
 
 % --- MAIN --------------------------------------------------
 paradigmaDocsRegister(Sn1, Fecha, Username, Password, Sn2):-
-%    getNombreParaDoc(Sn1,Name),
+%    getNombreParaDoc(Sn1,Name),			--Revisar
     getFechaParaDoc(Sn1,Fecha1),
     getListaUsuParaDoc(Sn1,ListUsu1),
-%    getListaDocParaDoc(Sn1,ListDoc),
+%    getListaDocParaDoc(Sn1,ListDoc),		--Revisar
     getListaHistorialParaDoc(Sn1,Historial1),
     getIdParaDoc(Sn1,Id1),
-%    Id1 is Id2 + 1,
+    Id2 is Id1 + 1,
     not(pertenece(ListUsu1, Username)),
     usuario(Id1, Username, Password, [], Usuario),
     insertarAlPrincipio(Usuario, ListUsu1, ListUsu2),
     insertarAlPrincipio(Sn1, Historial1, Historial2),
     reemplazar(ListUsu1,ListUsu2, Sn1, Sn1A),
     reemplazar(Historial1,Historial2, Sn1A, Sn1B),
-    reemplazar(Fecha1,Fecha, Sn1B, Sn2),
-%    reemplazar(_,Id1, Sn1, Sn2),
+    reemplazar(Fecha1,Fecha, Sn1B, Sn1C),
+    reemplazar(Id1,Id2, Sn1C, Sn2),
     true, !.
 %------------------------------------------------------------
 
