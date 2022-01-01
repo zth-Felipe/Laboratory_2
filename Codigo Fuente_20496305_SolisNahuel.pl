@@ -89,7 +89,7 @@ getUsuariosId([_,_,_,_,Lista|_],Lista).
 % ---- TDA paradigmadoc
 % Formato: nombre paradigmadoc - fecha de paradigmadoc - lista de usuarios - lista de documentos - historial paradigmadoc.
 % Predicado TDA paradigmadoc
-paradigmadoc(NombreParadoc, FechaParadoc, [NombreParadoc, FechaParadoc, ["lista_users"], ["lista_doc"], ["historial"], 0]).
+paradigmadoc(NombreParadoc, FechaParadoc, [NombreParadoc, FechaParadoc, ["lista_users"], ["lista_doc"], ["historial"], 0, ["Sesion Actual"]]).
 
 % Como constructor
 % paradigmadoc("paradigmadoc1", Fecha1, PARADOC1).
@@ -116,15 +116,18 @@ getIdParaDoc([_,_,_,_,_,Id|_],Id).
 %    reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
 
 % --- MAIN --------------------------------------------------
+
+
+% -Register
+% Formato: ParadigmaDocs X date X string X string X ParadigmaDocs
+% Predicado:
 paradigmaDocsRegister(Sn1, Fecha, Username, Password, Sn2):-
-%    getNombreParaDoc(Sn1,Name),			--Revisar
     getFechaParaDoc(Sn1,Fecha1),
     getListaUsuParaDoc(Sn1,ListUsu1),
-%    getListaDocParaDoc(Sn1,ListDoc),		--Revisar
     getListaHistorialParaDoc(Sn1,Historial1),
     getIdParaDoc(Sn1,Id1),
     Id2 is Id1 + 1,
-    not(pertenece(ListUsu1, Username)),
+    not(perteneceN(ListUsu1, Username)),
     usuario(Id1, Username, Password, [], Usuario),
     insertarAlPrincipio(Usuario, ListUsu1, ListUsu2),
     insertarAlPrincipio(Sn1, Historial1, Historial2),
@@ -133,11 +136,18 @@ paradigmaDocsRegister(Sn1, Fecha, Username, Password, Sn2):-
     reemplazar(Fecha1,Fecha, Sn1B, Sn1C),
     reemplazar(Id1,Id2, Sn1C, Sn2),
     true, !.
-%------------------------------------------------------------
 
+perteneceN([[_,Nombre,_,_]|_], Nombre):-!.
+perteneceN([[_,_,_,_]|Resto], Nombre):-
+    perteneceN(Resto,Nombre).
 
 insertarAlPrincipio( Elemento, [], [Elemento] ).
 insertarAlPrincipio( Elemento, Lista, [Elemento|Lista] ).
+
+%------------------------------------------------------------
+
+
+
 
 insertarSinDuplicados( [], Elemento, [Elemento] ).
 insertarSinDuplicados( [Elemento|Resto], Elemento, [Elemento|Resto] ) :- !.
@@ -148,8 +158,32 @@ insertarAlFinal( Elemento, [], [Elemento] ).
 insertarAlFinal( Elemento, [Cabeza|Resto], [Cabeza|Lista] ) :-
         insertarAlFinal( Elemento, Resto, Lista ).
 
-pertenece([[_,Nombre,_,_]|_], Nombre):-!.
-pertenece([[_,_,_,_]|Resto], Nombre):-
-    pertenece(Resto,Nombre).
 
+% -Login
+% Formato: ParadigmaDocs X string X string X ParadigmaDocs
+% Predicado:
+paradigmaDocsLogin(Sn1, Username, Password, Sn2):-
+    getListaUsuParaDoc(Sn1,ListU),
+    perteneceN(ListU, Username),
+    perteneceC(ListU, Password),
+    
+perteneceN([[_,Nombre,_,_]|_], Nombre):-!.
+perteneceN([[_,_,_,_]|Resto], Nombre):-
+    perteneceN(Resto,Nombre).
+reemplazar( _, _, [], []).
+reemplazar( Antiguo, Reemplazo , [Antiguo|Resto], [Reemplazo|NuevoResto] ):- 
+    reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
+reemplazar( Antiguo, Reemplazo, [Cabeza|Resto],[Cabeza|NuevoResto] ):- 
+    Cabeza \= Antiguo, 
+    reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
+        
+ultimoElemento( Elemento , [Elemento],_ ):-
+    
+ultimoElemento( Elemento , [_|Lista] ) :- 
+	ultimoElemento( Elemento, Lista ).
+
+
+perteneceC([[_,_,Contrasena,_]|_], Contrasena):-!.
+perteneceC([[_,_,_,_]|Resto], Contrasena):-
+    perteneceC(Resto,Contrasena).
 
