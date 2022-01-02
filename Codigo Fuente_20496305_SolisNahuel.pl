@@ -106,6 +106,7 @@ getListaUsuParaDoc([_,_,ListU|_],ListU).
 getListaDocParaDoc([_,_,_,ListD|_],ListD).
 getListaHistorialParaDoc([_,_,_,_,ListH|_],ListH).
 getIdParaDoc([_,_,_,_,_,Id|_],Id).
+getSesionParaDoc([_,_,_,_,_,_,SA|_],SA).
 
 % Como modificador
 %reemplazar( _, _, [], []).
@@ -141,23 +142,14 @@ perteneceN([[_,Nombre,_,_]|_], Nombre):-!.
 perteneceN([[_,_,_,_]|Resto], Nombre):-
     perteneceN(Resto,Nombre).
 
+perteneceC([[_,_,Contrasena,_]|_], Contrasena):-!.
+perteneceC([[_,_,_,_]|Resto], Contrasena):-
+    perteneceC(Resto,Contrasena).
+
 insertarAlPrincipio( Elemento, [], [Elemento] ).
 insertarAlPrincipio( Elemento, Lista, [Elemento|Lista] ).
 
 %------------------------------------------------------------
-
-
-
-
-insertarSinDuplicados( [], Elemento, [Elemento] ).
-insertarSinDuplicados( [Elemento|Resto], Elemento, [Elemento|Resto] ) :- !.
-insertarSinDuplicados( [Cabeza|Resto], Elemento, [Cabeza|NuevoResto] ):-
-	insertarSinDuplicados( Resto, Elemento, NuevoResto ).
-
-insertarAlFinal( Elemento, [], [Elemento] ).
-insertarAlFinal( Elemento, [Cabeza|Resto], [Cabeza|Lista] ) :-
-        insertarAlFinal( Elemento, Resto, Lista ).
-
 
 % -Login
 % Formato: ParadigmaDocs X string X string X ParadigmaDocs
@@ -166,24 +158,24 @@ paradigmaDocsLogin(Sn1, Username, Password, Sn2):-
     getListaUsuParaDoc(Sn1,ListU),
     perteneceN(ListU, Username),
     perteneceC(ListU, Password),
-    
-perteneceN([[_,Nombre,_,_]|_], Nombre):-!.
-perteneceN([[_,_,_,_]|Resto], Nombre):-
-    perteneceN(Resto,Nombre).
-reemplazar( _, _, [], []).
-reemplazar( Antiguo, Reemplazo , [Antiguo|Resto], [Reemplazo|NuevoResto] ):- 
-    reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
-reemplazar( Antiguo, Reemplazo, [Cabeza|Resto],[Cabeza|NuevoResto] ):- 
-    Cabeza \= Antiguo, 
-    reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
-        
-ultimoElemento( Elemento , [Elemento],_ ):-
-    
-ultimoElemento( Elemento , [_|Lista] ) :- 
-	ultimoElemento( Elemento, Lista ).
+    getSesionParaDoc(Sn1,SesionA),
+    entregaUsuario(ListU, Username, US),
+    reemplazar(SesionA, US, Sn1, Sn2), !.
+
+entregaUsuario([Usuario|_],Username, Usuario):-
+    getNombreUser(Usuario, Username).
+entregaUsuario([_|Resto],Username,Usuario):-
+    entregaUsuario(Resto,Username,Usuario).
 
 
-perteneceC([[_,_,Contrasena,_]|_], Contrasena):-!.
-perteneceC([[_,_,_,_]|Resto], Contrasena):-
-    perteneceC(Resto,Contrasena).
+%------------------------------------------------------------
+
+% -Create
+% Formato: ParadigmaDocs X date X string X string X ParadigmaDocs
+% Predicado:
+paradigmaDocsCreate(Sn1, Fecha, Nombre, Contenido, Sn2):-
+    
+
+
+
 
