@@ -50,6 +50,7 @@ reemplazar( Antiguo, Reemplazo , [Antiguo|Resto], [Reemplazo|NuevoResto] ):-
 reemplazar( Antiguo, Reemplazo, [Cabeza|Resto],[Cabeza|NuevoResto] ):- 
     Cabeza \= Antiguo, 
     reemplazar( Antiguo, Reemplazo, Resto, NuevoResto ).
+
 % ----
 
 
@@ -60,7 +61,7 @@ reemplazar( Antiguo, Reemplazo, [Cabeza|Resto],[Cabeza|NuevoResto] ):-
 %    integer(IDdoc), string(NombreDoc), string(Contenido).
 
 % Sin verificaciones
-documento(IDdoc, NombreDoc, Contenido, FechaDoc, [IDdoc, NombreDoc, Contenido, FechaDoc, []]).
+documento(IDdoc, NombreDoc, Contenido, FechaDoc, [IDdoc, NombreDoc, Contenido, FechaDoc, ["permisos"],["historial"]]).
 
 % Como constructor
 % documento(1, "Doc1", "primer documento", FechaDoc, DOC1).
@@ -149,18 +150,25 @@ perteneceC([[_,_,_,_]|Resto], Contrasena):-
 insertarAlPrincipio( Elemento, [], [Elemento] ).
 insertarAlPrincipio( Elemento, Lista, [Elemento|Lista] ).
 
+
+
 %------------------------------------------------------------
 
 % -Login
 % Formato: ParadigmaDocs X string X string X ParadigmaDocs
 % Predicado:
-paradigmaDocsLogin(Sn1, Username, Password, Sn2):-
+paradigmaDocsLogin(Sn1, Username, Password, [NaP, FeP, ListUP, ListDoc, ListHP, Id, US]):-
+    getNombreParaDoc(Sn1,NaP),
+	getFechaParaDoc(Sn1,FeP),
+	getListaUsuParaDoc(Sn1,ListUP),
+    getListaDocParaDoc(Sn1,ListDoc),
+	getListaHistorialParaDoc(Sn1,ListHP),
+	getIdParaDoc(Sn1,Id),    
+    
     getListaUsuParaDoc(Sn1,ListU),
     perteneceN(ListU, Username),
     perteneceC(ListU, Password),
-    getSesionParaDoc(Sn1,SesionA),
-    entregaUsuario(ListU, Username, US),
-    reemplazar(SesionA, US, Sn1, Sn2), !.
+    entregaUsuario(ListU, Username, US), !.
 
 entregaUsuario([Usuario|_],Username, Usuario):-
     getNombreUser(Usuario, Username).
@@ -173,9 +181,34 @@ entregaUsuario([_|Resto],Username,Usuario):-
 % -Create
 % Formato: ParadigmaDocs X date X string X string X ParadigmaDocs
 % Predicado:
-paradigmaDocsCreate(Sn1, Fecha, Nombre, Contenido, Sn2):-
+paradigmaDocsCreate(Sn1, Fecha, Nombre, Contenido, [NaP, FeP, ListUP, ListDoc1, ListHP, Id, ["Sesion Actual"]]):-
+    getNombreParaDoc(Sn1,NaP),
+	getFechaParaDoc(Sn1,FeP),
+	getListaUsuParaDoc(Sn1,ListUP),
+	getListaHistorialParaDoc(Sn1,ListHP),
+	getIdParaDoc(Sn1,Id),
+    
+    getSesionParaDoc(Sn1, SesionA),
+    getIDUser(SesionA, Id0),
+    permisoDoc(Id0, "A", Permiso),
+    getListaDocParaDoc(Sn1,ListDoc),
+    getDocList(ListDoc, Doc1),
+    getIdDoc(Doc1, Id1),
+    Id2 is Id1 + 1,
+    documento(Id2, Nombre, Contenido, Fecha, Doc2),
+    getUsuariosId(Doc2,UsuP1),
+    insertarAlPrincipio(Permiso, UsuP1, UsuP2),
+    reemplazar(UsuP1, UsuP2, Doc2, Doc3),
+    insertarAlPrincipio(Doc3, ListDoc, ListDoc1), !.
     
 
 
+    
+permisoDoc(Id,Per,[Id,Per]).
+    
+getDocList(["lista_doc"],[0,_,_,_,_,_]).        
+getDocList([Doc|_],Doc).
+
+% == identicos
 
 
