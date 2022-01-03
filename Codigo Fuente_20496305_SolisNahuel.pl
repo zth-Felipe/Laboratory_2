@@ -126,18 +126,20 @@ getSesionParaDoc([_,_,_,_,_,_,SA|_],SA).
 paradigmaDocsRegister(Sn1, Fecha, Username, Password, Sn2):-
     getFechaParaDoc(Sn1,Fecha1),
     getListaUsuParaDoc(Sn1,ListUsu1),
-    getListaHistorialParaDoc(Sn1,Historial1),
+%    getListaHistorialParaDoc(Sn1,Historial1),
     getIdParaDoc(Sn1,Id1),
     Id2 is Id1 + 1,
     not(perteneceN(ListUsu1, Username)),
     usuario(Id1, Username, Password, [], Usuario),
     insertarAlPrincipio(Usuario, ListUsu1, ListUsu2),
-    insertarAlPrincipio(Sn1, Historial1, Historial2),
-    reemplazar(ListUsu1,ListUsu2, Sn1, Sn1A),
-    reemplazar(Historial1,Historial2, Sn1A, Sn1B),
+%    insertarAlPrincipio(Sn1, Historial1, Historial2),
+    reemplazar(ListUsu1,ListUsu2, Sn1, Sn1B),
+%    reemplazar(Historial1,Historial2, Sn1A, Sn1B),
     reemplazar(Fecha1,Fecha, Sn1B, Sn1C),
     reemplazar(Id1,Id2, Sn1C, Sn2),
     true, !.
+
+
 
 perteneceN([[_,Nombre,_,_]|_], Nombre):-!.
 perteneceN([[_,_,_,_]|Resto], Nombre):-
@@ -163,7 +165,7 @@ paradigmaDocsLogin(Sn1, Username, Password, [NaP, FeP, ListUP, ListDoc, ListHP, 
 	getListaUsuParaDoc(Sn1,ListUP),
     getListaDocParaDoc(Sn1,ListDoc),
 	getListaHistorialParaDoc(Sn1,ListHP),
-	getIdParaDoc(Sn1,Id),    
+	getIdParaDoc(Sn1,Id),
     
     getListaUsuParaDoc(Sn1,ListU),
     perteneceN(ListU, Username),
@@ -202,8 +204,6 @@ paradigmaDocsCreate(Sn1, Fecha, Nombre, Contenido, [NaP, FeP, ListUP, ListDoc1, 
     insertarAlPrincipio(Doc3, ListDoc, ListDoc1), !.
     
 
-
-    
 permisoDoc(Id,Per,[Id,Per]).
     
 getDocList(["lista_doc"],[0,_,_,_,_,_]).        
@@ -211,4 +211,24 @@ getDocList([Doc|_],Doc).
 
 % == identicos
 
+%------------------------------------------------------------
+
+% -Share
+% Formato: ParadigmaDocs X integer X string list X string list X ParadigmaDocs
+% Predicado: 
+paradigmaDocsShare(Sn1, DocumentId, ListaPermisos, ListaUsernamesPermitidos, Sn2):-
+    getNombreParaDoc(Sn1,NaP),
+	getFechaParaDoc(Sn1,FeP),
+	getListaUsuParaDoc(Sn1,ListUP),
+    getListaDocParaDoc(Sn1,ListDoc),
+	getListaHistorialParaDoc(Sn1,ListHP),
+	getIdParaDoc(Sn1,Id),
+    getSesionParaDoc(Sn1,SA),
+    
+    
+    
+    
+    
+    
+    
 
