@@ -1,0 +1,24 @@
+Laboratorio 2 Prolog: Autoevaluación
+|--------------Requerimientos no funcionales--------------|
+- Autoevaluación:	1
+- Lenguaje:		1
+- Versión:		1
+- Documentación:	1
+- Organización:		1
+- Historial:		1
+- Ejemplos:		1
+- Prerrequisitos:	1
+
+|---------------Requerimientos funcionales----------------|
+- TDAs:			1
+- Register:		1
+- Login:		1
+- Create:		1
+- Share:		0
+- Add:			0
+- restoreVersion:	0
+- DocsToString:		0
+- RevokeAllAcceses:	0
+- DocsSearch:		0
+- DocsDelete:		0
+- DocsSearchAndReplace: 0
